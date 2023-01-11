@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Service
@@ -18,10 +19,13 @@ import java.util.Map;
 public class CustomerService {
 
     final CustomerRepository customerRepository;
+    final TinkEncDec tinkEncDec;
 
     public ResponseEntity save(Customer customer) {
         Map<REnum, Object> hm = new LinkedHashMap<>();
         try {
+            String newsPass = tinkEncDec.encrypt(customer.getPassword());
+            customer.setPassword(newsPass);
             customerRepository.save(customer);
             hm.put(REnum.status, true);
             hm.put(REnum.result, customer);
@@ -32,5 +36,23 @@ public class CustomerService {
             return new ResponseEntity(hm, HttpStatus.BAD_REQUEST);
         }
     }
+
+    public ResponseEntity login(Customer customer) {
+        Map<REnum, Object> hm = new LinkedHashMap<>();
+        Optional<Customer> optionalCustomer = customerRepository.findByEmailEqualsIgnoreCase(customer.getEmail());
+        if ( optionalCustomer.isPresent() ) {
+            Customer c = optionalCustomer.get();
+            String dbPass = tinkEncDec.decrypt(c.getPassword());
+            if (customer.getPassword().equals(dbPass)) {
+                hm.put(REnum.status, true);
+                hm.put(REnum.result, c);
+                return new ResponseEntity(hm, HttpStatus.OK);
+            }
+        }
+        hm.put(REnum.status, false);
+        hm.put(REnum.message, "Email or Password Fail");
+        return new ResponseEntity(hm, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

@@ -15,8 +15,6 @@ public class Customer {
     private Long cid;
 
     @Length(min = 2, max = 100)
-    @NotEmpty
-    @NotNull
     @Column(length = 100)
     private String name;
 
@@ -36,5 +34,6 @@ public class Customer {
     @NotNull
     @Column(length = 500)
     private String password;
+
 
 }
