@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class CustomerRestController {
 
     final CustomerService customerService;
+    final HttpServletRequest request;
 
     @PostMapping("/save")
     public ResponseEntity save(@Valid @RequestBody Customer customer) {
@@ -27,11 +29,5 @@ public class CustomerRestController {
         return customerService.login(customer);
     }
 
-    @GetMapping("/product")
-    public Object product() {
-        Map hm = new HashMap();
-        hm.put("product", "All Prod");
-        return hm;
-    }
 
 }

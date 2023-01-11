@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class CustomerService {
 
     final CustomerRepository customerRepository;
     final TinkEncDec tinkEncDec;
+    final HttpServletRequest request;
 
     public ResponseEntity save(Customer customer) {
         Map<REnum, Object> hm = new LinkedHashMap<>();
@@ -46,6 +48,7 @@ public class CustomerService {
             if (customer.getPassword().equals(dbPass)) {
                 hm.put(REnum.status, true);
                 hm.put(REnum.result, c);
+                request.getSession().setAttribute("user", c);
                 return new ResponseEntity(hm, HttpStatus.OK);
             }
         }
