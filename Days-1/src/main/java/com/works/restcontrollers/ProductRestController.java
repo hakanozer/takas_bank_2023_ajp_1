@@ -22,8 +22,18 @@ public class ProductRestController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity list() {
-        return service.list();
+    public ResponseEntity list(@RequestParam(defaultValue = "0") int page) {
+        return service.list(page);
+    }
+
+    @GetMapping("/allList")
+    public ResponseEntity allList(@RequestParam(defaultValue = "0") int page) {
+        return service.allList(page);
+    }
+
+    @GetMapping("/products")
+    public ResponseEntity products() {
+        return service.products();
     }
 
 }
