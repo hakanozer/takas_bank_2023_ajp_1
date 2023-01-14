@@ -13,6 +13,7 @@ public class Action implements Runnable {
             if (false) break;
             try {
                 Thread.sleep(1000);
+                System.out.println( Thread.currentThread().getName() );
             }catch (Exception ex)  {};
             System.out.println("Upload : " + imagePath);
         }
